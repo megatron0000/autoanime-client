@@ -1,0 +1,86 @@
+<div style="background: aliceblue; margin: 0; padding-top: 20px">
+
+    <div style="height: 60px; display: flex; justify-content: center;">
+        <h2 style="position: absolute;">Auto Anime</h2>
+        <div style="width:100%;" id="waitingForSocketCbAlert" class="collapse"
+             ng-controller="SocketCallbackWaitingController">
+            <div class="alert alert-warning" style="position: fixed; width: 80%;
+            margin-left: 10%; border: 5px solid #cc0000; border-radius: 4px; z-index: 10000000; text-align: center">
+                <span class="badge badge-danger">{{counter}}</span>
+                Waiting for server response...
+            </div>
+        </div>
+    </div>
+
+    <form class="form-inline" ng-controller="CreateServerController">
+        <label class="my-1 mr-2" for="createServerNameInput">Create a new server:</label>
+        <input type="text" class="form-control mb-2 mr-sm-2" id="createServerNameInput"
+               ng-model="createServerInput"
+               placeholder="Server name">
+
+        <button type="submit" ng-click="submitServerCreateForm();" ng-disabled="createServerInput === ''"
+                class="btn btn-primary mb-2">Submit
+        </button>
+    </form>
+
+    <form class="form-inline" ng-controller="DeleteServerController">
+        <label style="width:140px" class="my-1 mr-2" for="deleteServerNameInput">Delete a server:</label>
+        <input type="text" class="form-control mb-2 mr-sm-2" id="deleteServerNameInput"
+               ng-model="deleteServerInput"
+               placeholder="Server name">
+
+
+        <button type="submit" ng-click="submitServerDeleteForm();" ng-disabled="deleteServerInput === ''"
+                class="btn btn-primary mb-2">Submit
+        </button>
+    </form>
+
+    <form class="form-inline">
+        <label style="width:140px" class="my-1 mr-2" for="showInactiveCheckbox">Show inactive ?</label>
+        <label class="el-switch el-switch-lg" id="showInactiveCheckbox" style="margin-bottom: 8px">
+            <input type="checkbox" ng-model="filtersShowInactive">
+            <span class="el-switch-style"></span>
+        </label>
+    </form>
+
+    <form class="form-inline">
+        <label style="width:140px" class="my-1 mr-2" for="showTailCheckbox">Show tail ?</label>
+        <label class="el-switch el-switch-lg" id="showTailCheckbox">
+            <input type="checkbox" ng-model="filtersShowTail">
+            <span class="el-switch-style"></span>
+        </label>
+    </form>
+
+    <br>
+
+    <table class="table table-striped table-bordered">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col" ng-click="openAnimeUpdateModal(null)">Title</th>
+            <th scope="col">Episodes</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="anime in animes | filter:(filtersShowInactive ? '' : {active: true})">
+            <th scope="row" ng-click="openAnimeUpdateModal(anime);">
+                <sup><span class="badge badge-pill badge-danger">{{anime.active ? '' : 'Inactive'}}</span></sup>
+                {{anime.title}}
+            </th>
+            <td style="display: flex; flex-wrap: wrap" ng-click="linkRescan({animeTitle: anime.title})">
+                <button class="btn" ng-class="{'btn-secondary': !episode.watched, 'btn-success': episode.watched}"
+                        style="margin: 3px;"
+                        ng-repeat="episode in anime.episodes | filter : episodeFilter(anime)"
+                        ng-click="$event.stopPropagation();openEpisodeInfoModal({number: episode.number, animeTitle: anime.title, watched: episode.watched, urls: episode.urls})">
+                    {{episode.number}}
+                </button>
+                <button 
+                class="btn btn-warning" 
+                ng-if="anime.episodes[anime.episodes.length - 1].number - lastWatched[anime.title] > displayLimits[anime.title]"
+                ng-click="$event.stopPropagation();displayLimits[anime.title] = displayLimits[anime.title] + 20">
+                    +
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

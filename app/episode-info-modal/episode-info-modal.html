@@ -1,0 +1,21 @@
+<div class="modal fade" id="episodeInfoModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{episodeInfo.animeTitle}}, episode {{episodeInfo.number}}</h5>
+                <button type="button" class="close"data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+            </div>
+            <div class="modal-body">
+                <h6>Links to watch</h6>
+                <a target="_blank" ng-repeat="serv in episodeInfo.urls" href="{{serv.url}}" type="button" class="btn btn-secondary btn-lg btn-block">{{serv.server}}</a>
+                <hr>
+                <button ng-click="changeWatchStatus()" type="button" class="btn btn-primary btn-lg btn-block">{{episodeInfo.watched ? 'Mark as unwatched' : 'Mark as watched'}}</button>
+                <button ng-click="rescanLinks()" type="button" class="btn btn-default btn-lg btn-block">Rescan for links</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
